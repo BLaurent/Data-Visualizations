@@ -1,0 +1,343 @@
+body {
+
+    margin:0px;
+}
+
+/*********************************************************************************************************************
+
+                                                MAIN <HTML> ELEMENTS
+
+**********************************************************************************************************************/
+
+#currentDisplay{      /* MOVE THIS TO HALO VIZ SECTION */
+    width: 800px;
+    height: 800px;
+    background-color: white;
+    position: relative;
+    left: 18%;
+}
+#currentDisplay2{
+    visibility: hidden;
+    width: 800px;
+    height: 800px;
+    position: absolute;
+    top: 0px;
+    left: 600px;
+}
+
+#viz_container1 {
+    margin: 0px auto;
+    padding-top:0px;
+    border-radius:6px;
+}
+#viz_container2 {
+    margin: 0px auto;
+    padding-top:0px;
+    border-radius:6px;
+}
+.form-check {
+    width: 20%;
+    font-family:Raleway;
+    border-radius: 10px;
+    background: #f1f1f1;
+    border-style: solid;
+    border-width: 5px;
+    border-color: #B2B2B2;
+    left: 4%;
+    top: 20%;
+    position: absolute;
+}
+
+.form{
+    font-size: 14px;
+    margin: 15px auto;
+    text-align: center;
+}
+.range{
+    position: absolute;
+    top: -20%;
+}
+.noUiSlider{
+    width: 90%;
+    margin: 0px auto;
+    top: 100%;
+    position: relative;
+}
+.noUiSlider .noUi-connect {
+	background: gray;
+}
+.noUiSlider .noUi-tooltip {
+
+}
+.year {
+    position: relative;
+    font-weight:300;
+    font-family: Raleway;
+    font-size: 60px;
+    width: 150px;
+    top: -67.5%;
+    left: 11%;
+}
+
+.graphTitle{
+    position: relative;
+    font-weight:300;
+    font-family: Raleway;
+    font-size: 20px;
+    width: 350px;
+    top: -57%;
+    left: 30.5%;
+
+}
+
+#btn{
+    position: absolute;
+    width: 105%;
+    left: -2.5%;
+    bottom: -50px;
+    text-align: center;
+}
+#animatebtn1{
+    font-size: 35px;
+    position: relative;
+    left: -14%;
+    top: 32px;
+}
+#animatebtn2{
+    font-size: 35px;
+    position: relative;
+    left: -14%;
+    top: 32px;
+}
+.material-icons:hover {
+
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
+
+}
+/********************************************************************************************************************
+
+                                                    SEARCH BOX
+
+**********************************+*********************************************************************************/
+
+.input[type=text] {
+    width: 50%;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+/* When the input field gets focus, change its width to 100% */
+input[type=text]:focus {
+    width: 100%;
+}
+.myUL {
+    /* Remove default list styling */
+    list-style-type: none;
+    border-radius: 5px;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    height: 0px;
+    width: 400px;
+    overflow: auto;
+    position: relative;
+    top: -62.35%;
+    left: 25%;
+}
+
+.myUL li a {
+    text-align: left;
+    width: 400px;
+    border: 1px solid #ddd; /* Add a border to all links */
+    margin-top: -1px; /* Prevent double borders */
+    background-color: rgb(255,255,255); /* Grey background color */
+    opacity: .98;
+    padding: 10px; /* Add some padding */
+    text-decoration: none; /* Remove default text underline */
+    font-size: 14px; /* Increase the font-size */
+    color: black; /* Add a black text color */
+    display: block; /* Make it into a block element to fill the whole list */
+
+}
+
+
+.myUL li a:hover:not(.header) {
+    background-color: #eee; /* Add a hover effect to all links, except for headers */
+}
+
+li:hover {
+    font-size: 21px;
+    font-weight: bolder;
+
+}
+#search1{
+    width: 80%;
+}
+#search2{
+    width: 80%;
+}
+input[type=text] {
+    width: 50%px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    /*background-image: url('imgres.png');*/
+    background-position: 8px 8px;
+    background-size: 20px;
+    background-repeat: no-repeat;
+    padding: 10px 18px 10px 38px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+    margin 3px;
+}
+
+/**************************************************************************************************************
+
+                                                    HALO VIZ
+
+***************************************************************************************************************/
+@media only screen {
+    main {
+        padding-left:0px;
+    }
+}
+
+
+@media only screen and (max-width: 961px) {
+    main {
+        padding-left: 0px;
+    }
+}
+.filled-in{
+    width:1px;
+}
+.fader {
+    font-family: "Roboto";
+    font-size: 20px;
+    font-weight:200;
+    text-anchor: middle;
+    font-weight: 400;
+}
+.vz-halo-label{
+    margin-left: 00 px;
+    opacity: 0;
+}
+
+.heading {
+    font-family:Raleway;
+    font-weight:300;
+}
+
+.datatip-value {
+    position:absolute;
+    right:10px;
+}
+
+
+.svg {
+    border-radius: 4px;
+    shape-rendering: crispEdges;
+}
+
+.vz-data-point {
+    fill-opacity:0;
+    stroke-width: 1px;
+    stroke-opacity:1;
+}
+
+.vz-tip-hover {
+    font-weight:300;
+}
+
+.vz-tip-hover text{
+    opacity:.8;
+}
+
+.my-tip {
+    font-family:Raleway;
+    font-weight:300;
+    text-anchor:middle;
+}
+
+
+
+
+/* MATERIAL.CSS */
+
+.input-field {
+    margin-left: 0px;
+    padding-bottom: 5px;
+    font-family: "Roboto";
+}
+
+
+div.settings-label {
+    font-size:12px;
+    color:#BBB;
+    font-style: italic;
+    margin-top:-10px;
+    margin-bottom:40px;
+    font-weight:300;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: left;
+    pointer-events: none;
+    width: 400px;
+    padding: 10px;
+    border: 1px solid #D5D5D5;
+    font-family: arial,helvetica,sans-serif;
+    font-size: 1.1em;
+    color: #333;
+    padding: 10px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.9);
+    color: #000;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    border:1px solid rgba(200,200,200,0.85);
+}
+
+.header-rule{
+    height:1px;
+    margin:1px auto 3px;
+    margin-top:7px;
+    margin-bottom:7px;
+    background:#ddd;
+    width:125px;
+}
+
+.header1{
+    color:#000;
+    text-transform:uppercase;
+    font-size: 12px;
+    margin-bottom: 2px;
+    text-align:center;
+}
+
+.header2 {
+    text-transform: uppercase;
+    text-align: left;
+    font-size: 14px;
+    margin-bottom: 2px;
+    color:#666;
+    text-align:center;
+}
+
+.header3 {
+    color:#333;
+    text-align: left;
+    font-size: 15px;
+    font-style: italic;
+    font-family: Georgia;
+    /*  width:170px;*/
+    text-align:center;
+}
+
+#myDataTip {
+    font-family:Raleway;
+    line-height: 18px;
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="styles/noUiSlider.9.1.0/nouislider.css" >
+<link href="styles/noUiSlider.9.1.0/nouislider.min.css" >
+<script src="styles/noUiSlider.9.1.0/nouislider.js"></script>
+<script src="styles/noUiSlider.9.1.0/nouislider.min.js"></script>
+</head>
+
+<body>
+	<div id="slider"></div>
+<script>
+var viz_slider = document.getElementById("slider");
+noUiSlider.create(viz_slider, {
+	start: [20, 80],
+	connect: true,
+	range: {
+		'min': 0,
+		'max': 100
+	}
+});
+</script>
+</body>
+
+</html>

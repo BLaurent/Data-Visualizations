@@ -1,0 +1,16 @@
+nodes.json:[
+	{"CND_ID":1,
+	"CND_NAME": "WORT",
+	"PTY": "REP",
+	"TRANSACTION_AMT": 500000,
+	"CMTE_ID":1,
+	"CMTE_NM": "B and O FIRM"
+	},
+	{"CND_ID":2,
+	"CND_NAME": "BENJAMIN",
+	"PTY": "DEM",
+	"TRANSACTION_AMT": 80000,
+	"CMTE_ID":2,
+	"CMTE_NM":"ARTIES"
+	}
+]
