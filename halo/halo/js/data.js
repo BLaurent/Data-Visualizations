@@ -115,10 +115,13 @@ function addGovEntities(data, array, i, x){
 
 /* update assoc. array of naicsCodes that are to be displayed. Called when check box is checked or unchecked */
 function changeNaics1(){
-    num = 1;                        //get rid of these two functions
+    console.log(num);
+    num = 1;  
+    console.log("changeNaics1");                      //get rid of these two functions
     changeNaics();
 }
 function changeNaics2(){
+    console.log('changeNaics2');
     num = 2;
     if(initialized == 1){
         clear();
@@ -135,6 +138,8 @@ function clear(){
 }
 function changeNaics(){
     naicsCode = String(event.target.value);
+    console.log(naicsCode);
+    console.log(num);
     if( event.target.checked == false){
         delete naicsCodes[num][naicsCode];
     }
@@ -150,12 +155,12 @@ function concatData(){
      if(yearLOW == undefined){
          $.each(naicsCodes[num], function(index, value){
             if(vizData[index][yearTOP] != undefined){
-                console.log("in if");
+
                 new_data = new_data.concat(vizData[index][yearTOP]);
             }
          });
      }
-     else{
+     else {
         console.log(yearTOP-yearLOW);
          $.each(naicsCodes[num], function(index, value){
             var y=0;
@@ -165,7 +170,6 @@ function concatData(){
             }
          });
      }
-     console.log("changing data");
      changeData(new_data);
 }
 

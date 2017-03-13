@@ -12,20 +12,20 @@ function unsplit(){
 function split(){
 
     num = 2;
-    viz[num]
     console.log(relatedCodes);
     concatData();
     $("#btn").attr("onClick", "unsplit()").html("SINGLE&nbspVIEW");
     $("#btn").attr("onClick", "unsplit()").html("SINGLE&nbspVIEW");
     $("#currentDisplay").css("left", "0%");
     $("#currentDisplay2").css("visibility", "visible");
+
 }
 
 function initSecondary(){
     num = 2;
     Initialized = 1;
     naicsCodes[num] = {};
-
+    yearTOP = 2000;
     loadData();
 
     viz_container2 = d3.selectAll("#viz_container2")
@@ -97,7 +97,9 @@ function initSecondary(){
         num = 2;
         yearTOP = values[0];
         //yearLOW = values[1];
-        pause();
+        ANIMATE = false;
+        $("#animatebtn"+num).attr("onclick","play()");
+        $("#animatebtn"+num).text("play_arrow");
         updateHeading();
         concatData();
     });

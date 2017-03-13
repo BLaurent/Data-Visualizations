@@ -2,7 +2,7 @@
 /* FILE contains helper code used for stylistic purposes or to initialize new elements */
 
 function createCheckbox(KEY){ return '<div><input class="filled-in" onClick="changeNaics'+num+'()" type="checkbox" id="'+ KEY +'" value="'+ KEY +
-'" ><label style="font-family:Courier New" for="'+KEY+'">'+KEY+'</label>&nbsp&nbsp<a href="#" onClick="deleteOption()" class="classname">x</a></div>';
+'" ><label style="font-family:Courier New; color: #EEE;" for="'+KEY+'">'+KEY+'</label>&nbsp&nbsp&nbsp<a class="link" href="#" onClick="deleteCheckBox()" class="classname">x</a></div>';
 }
 //
 // Function takes D3.text object and wraps onto multiple lines, each line of length width

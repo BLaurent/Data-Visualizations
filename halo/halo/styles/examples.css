@@ -70,13 +70,13 @@ body {
 
 }
 .year {
-    position: relative;
+    position: absolute;
     font-weight:300;
     font-family: Raleway;
     font-size: 60px;
     width: 150px;
     top: -67.5%;
-    left: 11%;
+    left: 0%;
 }
 
 .graphTitle{

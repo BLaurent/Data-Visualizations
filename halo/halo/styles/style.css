@@ -3,6 +3,7 @@ body {
     margin:0px;
 }
 
+
 /*********************************************************************************************************************
 
                                                 MAIN <HTML> ELEMENTS
@@ -38,20 +39,28 @@ body {
 .form-check {
     width: 20%;
     font-family:Raleway;
-    border-radius: 10px;
-    background: #f1f1f1;
-    border-style: solid;
-    border-width: 5px;
-    border-color: #B2B2B2;
+    border-radius: 3px;
+    background: #666;
+    border-color: #888;
     left: 4%;
     top: 20%;
     position: absolute;
+    color: white;
+    box-shadow: 1px 1px 3px #888888;
+}
+.link{
+
+    color: #999;
+}
+.link:hover{
+    color: #EEE;
 }
 
 .form{
     font-size: 14px;
     margin: 15px auto;
     text-align: center;
+    width: 95%;
 }
 .range{
     position: absolute;
@@ -69,14 +78,13 @@ body {
 .noUiSlider .noUi-tooltip {
 
 }
-.year {
+.year{
     position: relative;
-    font-weight:300;
+    top: -535px;
+    left: 45px;
+    display: inline-block;
     font-family: Raleway;
-    font-size: 60px;
-    width: 150px;
-    top: -67.5%;
-    left: 11%;
+    color: #555;
 }
 
 .graphTitle{
@@ -92,8 +100,8 @@ body {
 
 #btn{
     position: absolute;
-    width: 105%;
-    left: -2.5%;
+    width: 100%;
+    left: 0%;
     bottom: -50px;
     text-align: center;
 }
@@ -102,6 +110,7 @@ body {
     position: relative;
     left: -14%;
     top: 32px;
+    color:  #4d4d4d;
 }
 #animatebtn2{
     font-size: 35px;
@@ -137,12 +146,13 @@ input[type=text]:focus {
     text-align: left;
     padding: 0;
     margin: 0;
-    height: 0px;
+    height: 350px;
     width: 400px;
     overflow: auto;
     position: relative;
-    top: -62.35%;
-    left: 25%;
+    top: -79.35%;
+    left: 6%;
+
 }
 
 .myUL li a {

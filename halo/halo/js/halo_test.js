@@ -8,10 +8,13 @@ var naicsCodes2 = {};   // holds checked codes that are currently/to be displaye
 var Industry_title = {};// D3 selection that holds displayed industry title
 var vizData = {};       // updated data used attached to viz selection
 var viz_container;      // html element that holds the viz (d3 selection)
-var yearTOP;            // hold lower bound of year range (first handle of slider)
-var yearLOW;            // hold upper bound of year range (second handle of slider)
+var yearTOP;            // upper bound of year range for PRIMARY GRAPH
+var yearLOW;            // lower bound of year range for PRIMARY GRAPH 
+var yearTOP2;           // upper bound of year range for Secondary Graph
+var yearLOW2;           // lower bound of year range for Secondary Graph
+var years = {};
 var customSkin;         // biparison theme
-var relatedCodes;       // suggested Industy Data based on user's NaicsCode search
+var relatedCodes;       // suggested Industy Data based on user's NaicsCode search (NOT IN USE)
 var Industry;           // text to go in Industry title
 var repColor="#F80018";
 var demColor="#0543bc";
@@ -53,15 +56,19 @@ function initPrimary() {
     Initialize();
     changeSize(d3.select("#currentDisplay").attr("item_value"));
     updateHeading();
-    yearTOP = Number(yearTOP) + 1;
-    //animate_graph();
+    yearTOP = Number(yearTOP) + 1;         //figure out why i did this
+    console.log("before animate grph");
+    animate_graph();
+
 
     viz_slider[1].noUiSlider.on('set', function(values, handle){
         num = 1;
         if(yearTOP != values[0]){
             yearTOP = values[0];
             yearLOW = undefined;
-            pause();
+            ANIMATE = false;
+             $("#animatebtn1").attr("onclick","play()");
+             $("#animatebtn1").text("play_arrow");
             concatData();
             updateHeading();
         }
@@ -288,10 +295,10 @@ function updateHeading(){
     })
 
     if(yearLOW == undefined){
-        $("#title"+num).html(yearTOP).css("left", "11%").css("font-size", "60px");
+        $("#title"+num).html(yearTOP).css("font-size", "60px");
     }
     else {
-        $("#title"+num).html(yearLOW + "<br> - " + yearTOP).css("left", "11%").css("font-size", "45px");
+        $("#title"+num).html(yearLOW + "<br> - " + yearTOP).css("font-size", "45px");
     }
     $("#gt"+num).html("Lobbying Expenses for Congressional Bills by Firms in Industry Group " + num);
     Industry_title[num].text(Industry).call(wrap, INDUSTRY_TITLE_WIDTH);
@@ -305,15 +312,20 @@ function updateHeading(){
 function search(){
 
     num = Num(event.target);
+    console.log("in search");
     var KEY = event.target.value;
     if(event.target.value == ""){
-        $("#myUL"+num).children().remove();
+        hideFilter();
+    }
+    else if(event.target.value.length == 1){
+        showFilter();
     }
     else if(event.keyCode == 13){
         loadCheckBox(KEY, true);
     }
     else{
         $("#myUL"+num).children().remove();
+        console.log('in else statement');
         getfilterOptions(KEY, naics_tree);
     }
     if($("#myUL"+num).children().length > 8){           //adds border if there is an overflow
@@ -329,6 +341,9 @@ function getfilterOptions(KEY, object){
         if(KEY.indexOf(key) == 0 || key.indexOf(KEY) == 0){
             if(key.length <= KEY.length){
                 $("#myUL"+num).prepend('<li ><a id='+key+' onclick="loadCheckBox()" >'+key+" : "+value[1]+'</a></li>');
+                if(key.length == 2){
+                    $("#"+key).css("font-weight", "bold");
+                }
             }
             else{
                 $("#myUL"+num).append('<li ><a id='+key+' onclick="loadCheckBox()" >'+key+" : "+value[1]+'</a></li>');
@@ -341,12 +356,20 @@ function hideFilter(){
     num = Num(event.target);
     $("#myUL"+num).css("border", "0px solid #ddd");
     event.target.value = "";
-    setTimeout(function(){ $("#myUL"+num).children().remove();
-    }, 50);
+    console.log("hide filter");
+    console.log(num);
+    setTimeout(function(){ 
+        $("#myUL"+num).children().remove();
+        $("#myUL"+num).css("z-index", "-2");
+
+    }, 10);
 }
 function showFilter(){
     num = Num(event.target);
-    $("#myUL"+num).css("visibility", "visible");
+    console.log("show filter");
+    console.log(num);
+    $("#viz_container"+num).append('<ul class="myUL" id="myUL'+num+'"></ul>')
+    $("#myUL"+num).css("z-index", "2");
 }
 /***********************************************************************************************************************
 
@@ -356,35 +379,44 @@ function showFilter(){
  * Is getting into function double the amount of times the second time with KEY = ''; FIX THIS FUNCTION
  */
 function loadCheckBox(KEY, bool){
-    if(bool == undefined){
+    if(event != undefined){
         num = Num(event.target.parentNode.parentNode);
+        console.log(num);
+        console.log("BOOL = UNDEFINED BI");
         KEY = event.target.id;
-    }
-    for(i=0; i<relatedCodes.length; i++){
-        if(relatedCodes[i] == KEY){ $("#search"+num).val(""); return; }
     }
 
     if(KEY != '' && IndustryNames[KEY] != undefined){
-    $("#form"+num).append(createCheckbox(KEY));
+        console.log("up in here");
+        console.log(num);
+        elem = createCheckbox(KEY);
+        $("#form"+num).append(elem);
+        console.log($("#form"+num))
+        if($("#form"+num).children().length > 8){
+            $("#form"+num).children()[2].remove();
+        }
     relatedCodes[relatedCodes.length] = KEY;
-    d3.json("/halo/data/tech_naics/"+KEY+".json", function (json) {
-        data = json;
-        resolveDataConflicts(data, KEY);
-    });
+        d3.json("/halo/data/tech_naics/"+KEY+".json", function (json) {
+            data = json;
+            resolveDataConflicts(data, KEY);
+        });
     }
      $("#search"+num).val("");
 }
 
 function deleteCheckBox() {
     // If checkbox is checked we remove assoc. Industry data from the display
-    if(document.getElementById(id).checked == true){
-        var id = event.target.parentNode.getElementsByTagName('input')[0].id
-        delete naicsCodes[1][id];
+
+    var elem = event.target.parentNode.children[0];
+    num= Num(elem.parentNode.parentNode.id);
+    if(elem.checked == true){
+        delete naicsCodes[num][elem.id];
         concatData();
     }
     delete event.target.parentNode.remove();
 }
 
+/* function used to search DOM tree to see which halo graph (1 or 2) to change */
 function Num(element){
     if(element.id.indexOf("1") > -1){
         return 1;
