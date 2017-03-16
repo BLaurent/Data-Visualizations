@@ -312,6 +312,7 @@ function updateHeading(){
                                                 SEARCH BOX FILTER
 
 ************************************************************************************************************************/
+var ENTER = 13;
 
 function search(){
 
@@ -323,7 +324,7 @@ function search(){
     else if(event.target.value.length == 1){
         showFilter();
     }
-    else if(event.keyCode == 13){
+    else if(event.keyCode == ENTER){ 
         hideFilter()
         loadCheckBoxEnter(KEY);
     }
@@ -331,6 +332,7 @@ function search(){
         $("#myUL"+num).children().remove();
         getfilterOptions(KEY, naics_tree);
     }
+
     if($("#myUL"+num).children().length > 8){           //adds border if there is an overflow
         $("#myUL"+num).css("border", "1px solid #ddd")
     }
@@ -339,7 +341,7 @@ function search(){
     }
 }
 
-/* Add indentation so that filter represents a tree */
+/* Add indentation so that filter resembles a tree structure*/
 
 function getfilterOptions(KEY, object){
     $.each(object, function(key, value){

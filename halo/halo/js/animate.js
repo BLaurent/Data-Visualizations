@@ -1,5 +1,5 @@
 
-
+/* FILE contains implementation of automation of data changes per year */
 
 function animate_graph(){
     ANIMATE = true;
@@ -23,7 +23,6 @@ function next(){
             concatData();
             updateHeading();
         }
-        yearLOW = undefined;
         num=1;
         concatData();
         updateHeading();

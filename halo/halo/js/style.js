@@ -1,13 +1,34 @@
 
 /* FILE contains helper code used for stylistic purposes or to initialize new elements */
 
+
+/* CHECKBOX DIV ELEMENT */
+
 function createCheckbox(KEY){ return '<div><input class="filled-in" onClick="changeNaics'+num+'()" type="checkbox" id="'+ KEY +num+'" value="'+ KEY +
 '" ><label style="font-family:Courier New; color: #EEE;" for="'+KEY+num+'">'+KEY+'</label>&nbsp&nbsp&nbsp<a class="link" href="#" onClick="deleteCheckBox()" class="classname">x</a></div>';
 }
-//
-// Function takes D3.text object and wraps onto multiple lines, each line of length width
-// Used on Industry Heading
-//
+
+
+/* Adds indentation to Search filter and other styling */
+
+function formatFilter(key){
+    if(key.length == 2){
+        $("#"+key).css("font-weight", "bold");
+    }
+    if(key.length == 4){
+        $("#"+key).css("padding-left", "20px");
+    }   
+    if(key.length == 5){
+        $("#"+key).css("padding-left", " 40px");
+    }
+    if(key.length == 6){
+        $("#"+key).css("padding-left", "40px");
+    }
+}
+
+
+/* USED TO CREATE FILLER CIRCLES IN PLACE OF HALO WHEN NO DATA IS BEING DISPLAYED */
+
 function createCircle(n, string){
 IsCircle[n] = 1;
 circle = 
@@ -77,6 +98,10 @@ function clearCircle(n){
     viz[n].selection().select("svg").selectAll("circle")[0][0].remove();
 }
 
+//
+// Function takes D3.text object and wraps onto multiple lines, each line of length width
+// Used on Industry Heading
+//
 function wrap(text, width) {
 
     text.each(function() {
