@@ -9,16 +9,15 @@ var Industry_title = {};// D3 selection that holds displayed industry title
 var vizData = {};       // updated data used attached to viz selection
 var viz_container;      // html element that holds the viz (d3 selection)
 var yearTOP;            // upper bound of year range for PRIMARY GRAPH
-var yearLOW;            // lower bound of year range for PRIMARY GRAPH 
-var yearTOP2;           // upper bound of year range for Secondary Graph
-var yearLOW2;           // lower bound of year range for Secondary Graph
-var years = {};
+var loadedIndustries = {};
+var circle;
 var customSkin;         // biparison theme
 var relatedCodes;       // suggested Industy Data based on user's NaicsCode search (NOT IN USE)
 var Industry;           // text to go in Industry title
 var repColor="#F80018";
 var demColor="#0543bc";
 var otherColor="#FFa400";
+var ANIMATE; //bool value that determines if animate feature is on or off
 
 var WIDTH = 450;
 var HEIGHT = 510;
@@ -36,10 +35,10 @@ var datatip='<div class="tooltip" style="width: 250px; background-opacity:.5">' 
 function loadData() {
     d3.json("/halo/data/tech_naics/"+DEFAULT_CODE+".json", function (json) {
         data = json;
+        //console.log(data);
         resolveDataConflicts(data, DEFAULT_CODE);
-        if(initialized == 0){
+        if(IsCircle[2] == 0){
             initPrimary();
-            initialized = 1;
         }
         //console.log(vizData);
     });
@@ -52,13 +51,18 @@ function loadData() {
 //Initializes Primary Halo Viz.
 
 function initPrimary() {
+    /*var url = "http://beta.lobbyview.org/api/viz?legal_name=Google";
+    d3.json(url, function(error, d) {
+        console.log(d);
+    });*/
     num = 1;
     Initialize();
     changeSize(d3.select("#currentDisplay").attr("item_value"));
     updateHeading();
-    yearTOP = Number(yearTOP) + 1;         //figure out why i did this
-    console.log("before animate grph");
-    animate_graph();
+    yearTOP = Number(yearTOP) + 1;
+    $("#viz_container"+num).append('<ul class="myUL" id="myUL'+num+'"></ul>');
+    $("#viz_container"+num).css("z-index", -2);
+    //animate_graph();
 
 
     viz_slider[1].noUiSlider.on('set', function(values, handle){
@@ -312,7 +316,6 @@ function updateHeading(){
 function search(){
 
     num = Num(event.target);
-    console.log("in search");
     var KEY = event.target.value;
     if(event.target.value == ""){
         hideFilter();
@@ -321,33 +324,33 @@ function search(){
         showFilter();
     }
     else if(event.keyCode == 13){
-        loadCheckBox(KEY, true);
+        hideFilter()
+        loadCheckBoxEnter(KEY);
     }
     else{
         $("#myUL"+num).children().remove();
-        console.log('in else statement');
         getfilterOptions(KEY, naics_tree);
     }
     if($("#myUL"+num).children().length > 8){           //adds border if there is an overflow
-        $("#myUL"+num).css("border", "3px solid #ddd")
+        $("#myUL"+num).css("border", "1px solid #ddd")
     }
     else{                                               //removes border of UL element if no overflow
         $("#myUL"+num).css("border", "0px solid #ddd")
     }
 }
 
+/* Add indentation so that filter represents a tree */
+
 function getfilterOptions(KEY, object){
     $.each(object, function(key, value){
         if(KEY.indexOf(key) == 0 || key.indexOf(KEY) == 0){
             if(key.length <= KEY.length){
-                $("#myUL"+num).prepend('<li ><a id='+key+' onclick="loadCheckBox()" >'+key+" : "+value[1]+'</a></li>');
-                if(key.length == 2){
-                    $("#"+key).css("font-weight", "bold");
-                }
+                $("#myUL"+num).prepend('<li ><a id='+key+' onclick="loadCheckBoxClick()" >'+key+" : "+value[1]+'</a></li>');
             }
             else{
-                $("#myUL"+num).append('<li ><a id='+key+' onclick="loadCheckBox()" >'+key+" : "+value[1]+'</a></li>');
+                $("#myUL"+num).append('<li ><a id='+key+' onclick="loadCheckBoxClick()" >'+key+" : "+value[1]+'</a></li>');
             }
+            formatFilter(key);
             getfilterOptions(KEY, object[key][0]);
         }
     });
@@ -356,19 +359,15 @@ function hideFilter(){
     num = Num(event.target);
     $("#myUL"+num).css("border", "0px solid #ddd");
     event.target.value = "";
-    console.log("hide filter");
-    console.log(num);
     setTimeout(function(){ 
         $("#myUL"+num).children().remove();
         $("#myUL"+num).css("z-index", "-2");
 
     }, 10);
 }
+
 function showFilter(){
     num = Num(event.target);
-    console.log("show filter");
-    console.log(num);
-    $("#viz_container"+num).append('<ul class="myUL" id="myUL'+num+'"></ul>')
     $("#myUL"+num).css("z-index", "2");
 }
 /***********************************************************************************************************************
@@ -378,41 +377,54 @@ function showFilter(){
  * If searched number is a valid code and the code doesn't already have a CB we create a CB for it
  * Is getting into function double the amount of times the second time with KEY = ''; FIX THIS FUNCTION
  */
-function loadCheckBox(KEY, bool){
-    if(event != undefined){
-        num = Num(event.target.parentNode.parentNode);
-        console.log(num);
-        console.log("BOOL = UNDEFINED BI");
-        KEY = event.target.id;
-    }
-
-    if(KEY != '' && IndustryNames[KEY] != undefined){
-        console.log("up in here");
-        console.log(num);
+function loadCheckBoxClick(){
+    var KEY = event.target.id;
+    if(loadedIndustries[KEY] == undefined){
+        loadedIndustries[KEY] = KEY;
         elem = createCheckbox(KEY);
         $("#form"+num).append(elem);
-        console.log($("#form"+num))
         if($("#form"+num).children().length > 8){
-            $("#form"+num).children()[2].remove();
+            delete loadedIndustries[$("#form"+num).children()[2].value];
+            $("#form"+num).children()[2].remove();    
         }
-    relatedCodes[relatedCodes.length] = KEY;
         d3.json("/halo/data/tech_naics/"+KEY+".json", function (json) {
             data = json;
             resolveDataConflicts(data, KEY);
         });
+        $("#search"+num).val("");
     }
+}
+function loadCheckBoxEnter(KEY){
+    if(KEY != '' && IndustryNames[KEY] != undefined && loadedIndustries[KEY] == undefined){
+        loadedIndustries[KEY] = KEY;
+        num = Num(event.target.parentNode);
+        elem = createCheckbox(KEY);
+        naicsCodes[num][KEY] = KEY;
+        $("#form"+num).append(elem);
+        if($("#form"+num).children().length > 8){  
+            delete loadedIndustries[$("#form"+num).children()[2].value];
+            $("#form"+num).children()[2].remove();
+        }
+
+        d3.json("/halo/data/tech_naics/"+KEY+".json", function (json) {
+            data = json;
+            resolveDataConflicts(data, KEY);
+        });
+    
      $("#search"+num).val("");
+    }
 }
 
 function deleteCheckBox() {
     // If checkbox is checked we remove assoc. Industry data from the display
-
-    var elem = event.target.parentNode.children[0];
-    num= Num(elem.parentNode.parentNode.id);
-    if(elem.checked == true){
-        delete naicsCodes[num][elem.id];
+    var elem = event.target.parentNode.children[2].parentNode.parentNode;
+    var chkbox = event.target.parentNode.children[0];
+    num= Num(elem);
+    if(chkbox.checked == true){
+        delete naicsCodes[num][chkbox.value];
         concatData();
     }
+    delete loadedIndustries[chkbox.value];
     delete event.target.parentNode.remove();
 }
 
@@ -424,7 +436,22 @@ function Num(element){
     else
         return 2;
 }
+/* Adds indentation to filter and other styling */
 
+function formatFilter(key){
+    if(key.length == 2){
+        $("#"+key).css("font-weight", "bold");
+    }
+    if(key.length == 4){
+        $("#"+key).css("padding-left", "20px");
+    }   
+    if(key.length == 5){
+        $("#"+key).css("padding-left", " 40px");
+    }
+    if(key.length == 6){
+        $("#"+key).css("padding-left", "40px");
+    }
+}
 
 
 

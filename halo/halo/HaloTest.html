@@ -55,7 +55,7 @@
 
     <div id="currentDisplay" >
             <div id="viz_container1">
-                <div class="noUiSlider" ><i id="animatebtn1" onclick="pause()" class="material-icons">pause</i><div id="slider1"></div></div>
+                <div class="noUiSlider" ><i id="animatebtn1" onclick="pause()" class="material-icons">pause</i><i id="animatebtn2" onclick="replay()" class="material-icons">replay</i><div id="slider1"></div></div>
                 <div class="form-check">
                     <form class= "form" id="form1">
                         <div style="font-size: 16px;" >Industry Group 1</div>
@@ -65,21 +65,21 @@
                     </form>
                 </div>
             </div>
-        <div class="graphTitle" id="gt1"></div><div class="year" id="title1"></div>
+        <div class="graphTitle" id="gt1"></div></div>
     </div>
 
     <!-- HTML FOR 2nd HALO VIZ (USED when "DUAL VIEW" button is pushed) -->
 
     <div id="currentDisplay2">
         <div id="viz_container2">
-            <div class="noUiSlider"><i id="animatebtn2" class="material-icons">play_arrow</i><div id="slider2"></div></div>
+            <div class="noUiSlider"><i style="visibility: hidden;" id="animatebtn1" class="material-icons">pause</i><i style="visibility: hidden;" id="animatebtn2" class="material-icons">replay</i><div id="slider2"></div></div>
                 <div id= "form-check2" class="form-check">
                     <div class="form" id = "form2"><div style="font-size: 16px;">Industry Group 2</div>
                         <input id="search2" class="search"  placeholder="Search.."  onkeyup="search()" onblur="hideFilter()" onfocus="showFilter()">
                     </div>
                 </div>
             </div>
-        <div class="graphTitle" id="gt2"></div><div class="year" id='title2'></div>
+        <div class="graphTitle" id="gt2"></div></div>
     </div>
 
 <script>
@@ -94,21 +94,17 @@
     yearLOW = undefined;
     yearTOP2 = DEFAULT_YEAR;
     yearLOW2 = undefined;
-    years[1] = yearTOP;
-    years[2] = yearTOP2;
     currentYEAR = 2016;             //create function to retrieve this info
     naicsCodes[1] = naicsCodes1;
     naicsCodes[2] = naicsCodes2;
-    naicsCodes[1][DEFAULT_CODE] = DEFAULT_CODE;
-    relatedCodes = [];
-    initialized = 0;
+    IsCircle[2] = 0;                  //There is a filler circle while no data to display (true or false)
+    IsCircle[1] = 0;
     num=1;
     ANIMATE = false;                 //animation begins on page load
     var form = $('#form1');
 
 
     loadData();
-    loadCheckBox(DEFAULT_CODE, 1);
     $("#"+DEFAULT_CODE).prop("checked", true);
     //naicsCodes[num][DEFAULT_CODE+num] = DEFAULT_CODE+num;
 

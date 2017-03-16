@@ -1,13 +1,81 @@
 
 /* FILE contains helper code used for stylistic purposes or to initialize new elements */
 
-function createCheckbox(KEY){ return '<div><input class="filled-in" onClick="changeNaics'+num+'()" type="checkbox" id="'+ KEY +'" value="'+ KEY +
-'" ><label style="font-family:Courier New; color: #EEE;" for="'+KEY+'">'+KEY+'</label>&nbsp&nbsp&nbsp<a class="link" href="#" onClick="deleteCheckBox()" class="classname">x</a></div>';
+function createCheckbox(KEY){ return '<div><input class="filled-in" onClick="changeNaics'+num+'()" type="checkbox" id="'+ KEY +num+'" value="'+ KEY +
+'" ><label style="font-family:Courier New; color: #EEE;" for="'+KEY+num+'">'+KEY+'</label>&nbsp&nbsp&nbsp<a class="link" href="#" onClick="deleteCheckBox()" class="classname">x</a></div>';
 }
 //
 // Function takes D3.text object and wraps onto multiple lines, each line of length width
 // Used on Industry Heading
 //
+function createCircle(n, string){
+IsCircle[n] = 1;
+circle = 
+    viz[n].selection().select("svg")
+        .append("circle")
+        .attr("cy", WIDTH/2 + 40)
+        .attr("cx", WIDTH/2)
+        .attr("r", 188)
+        .style("fill", "#F80018")
+        .style("fill-opacity", .4)
+        .on('mouseover', function(d){
+            d3.select(this).style({fill:'#390000'})
+            d3.select(this).style('fill-opacity',.9)
+        })
+        .on('mouseout', function(d){
+            d3.select(this).style('fill',"#F80018")
+            d3.select(this).style('fill-opacity',.4);
+        });
+
+    viz[n].selection().select("svg").append("circle")
+        .attr("cy", WIDTH/2 + 40)
+        .attr("cx", WIDTH/2)
+        .attr("r", 178)
+        .style("fill", "white")
+        .style("fill-opacity", 1);
+    viz[n].selection().select("svg").append("circle")
+        .attr("cy", WIDTH/2 + 40)
+        .attr("cx", WIDTH/2)
+        .attr("r", 178)
+        .style("fill", "#F80018")
+        .style("fill-opacity", .15)
+        .on('mouseover', function(d){
+            circle.style({'fill':'#390000'}).style({'fill-opacity': .9})
+            d3.select(this).style({'fill-opacity': .6});
+        })
+        .on('mouseout', function(d){
+            d3.select(this).style({'fill-opacity': .15});
+            circle.style({'fill': "#F80018"}).style({'fill-opacity': .4});
+        });
+
+    viz[n].selection().select("svg").append("text")
+        .text(string)
+        .attr("y", viz[n].height()/2 + 20)
+        .attr("x", viz[n].width()/2)
+        .attr("text-anchor", "middle")
+        .style("fill", "white")
+        .style("font-family", "Raleway")
+        .style("font-size", "20px")
+        .style("fill-opacity", .8);
+
+    viz[n].selection().select("svg").append("text")
+        .text("<<")
+        .attr("x", WIDTH/5)
+        .attr("y", WIDTH/2 -20)
+        .style("fill", "white")
+        .style("font-family", "Raleway")
+        .style("font-size", "100px")
+        .style("fill-opacity", .3);
+}
+
+function clearCircle(n){
+    IsCircle[n] = 0;
+    viz[n].selection().select("svg").selectAll("circle")[0][2].remove();
+    viz[n].selection().select("svg").selectAll("circle")[0][0].remove();
+    viz[n].selection().select("svg").selectAll("text")[0][2].remove();
+    viz[n].selection().select("svg").selectAll("text")[0][1].remove();
+    viz[n].selection().select("svg").selectAll("circle")[0][0].remove();
+}
 
 function wrap(text, width) {
 
@@ -36,29 +104,29 @@ function wrap(text, width) {
 }
 
 function createSlider(slider){
-        noUiSlider.create(slider, {
-            start: [DEFAULT_YEAR],
-            margin: 0,
-            connect: true,
-            direction: 'ltr',
-            step: 1,
-            height: 10,
-            behaviour: 'tap-drag',
-            tooltips: true,
-              format: wNumb({
-                decimals: 0
-            }),
-            range: {
-                'min': 2000,
-                'max': 2016,
-            },
-            pips: {
-                mode: 'range',
-                stepped: true,
-                decimals: 0,
-                density: 6
-            }
-        });
+    noUiSlider.create(slider, {
+        start: [DEFAULT_YEAR],
+        margin: 0,
+        connect: true,
+        direction: 'ltr',
+        step: 1,
+        height: 10,
+        behaviour: 'tap-drag',
+        tooltips: true,
+        format: wNumb({
+            decimals: 0
+        }),
+        range: {
+            'min': 2000,
+            'max': 2016,
+        },
+        pips: {
+            mode: 'range',
+            stepped: true,
+            decimals: 0,
+            density: 6
+        }
+    });
 }
 
 

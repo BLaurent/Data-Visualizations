@@ -13,9 +13,9 @@ body {
 #currentDisplay{      /* MOVE THIS TO HALO VIZ SECTION */
     width: 800px;
     height: 800px;
-    background-color: white;
     position: relative;
     left: 18%;
+
 }
 #currentDisplay2{
     visibility: hidden;
@@ -27,6 +27,7 @@ body {
 }
 
 #viz_container1 {
+    background-color: #FFF;
     margin: 0px auto;
     padding-top:0px;
     border-radius:6px;
@@ -104,19 +105,21 @@ body {
     left: 0%;
     bottom: -50px;
     text-align: center;
+    z-index: 0;
 }
 #animatebtn1{
-    font-size: 35px;
+    font-size: 45px;
     position: relative;
-    left: -14%;
-    top: 32px;
+    left: -18%;
+    top: 35px;
     color:  #4d4d4d;
 }
 #animatebtn2{
-    font-size: 35px;
+    font-size:40px;
     position: relative;
-    left: -14%;
-    top: 32px;
+    left: -40%;
+    top: 35px;
+    color:  #4d4d4d;
 }
 .material-icons:hover {
 
@@ -146,12 +149,14 @@ input[type=text]:focus {
     text-align: left;
     padding: 0;
     margin: 0;
-    height: 350px;
+    height: 200px;
+    opacity: .99;
     width: 400px;
     overflow: auto;
     position: relative;
-    top: -79.35%;
+    top: -82%;
     left: 6%;
+    display: block;
 
 }
 
