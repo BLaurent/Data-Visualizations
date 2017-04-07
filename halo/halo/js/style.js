@@ -4,11 +4,25 @@
 
 /* CHECKBOX DIV ELEMENT */
 
-function createCheckbox(KEY){ return '<div><input class="filled-in" onClick="changeNaics'+num+'()" type="checkbox" id="'+ KEY +num+'" value="'+ KEY +
-'" ><label style="font-family:Courier New; color: #EEE;" for="'+KEY+num+'">'+KEY+'</label>&nbsp&nbsp&nbsp<a class="link" href="#" onClick="deleteCheckBox()" class="classname">x</a></div>';
+function createCheckbox(KEY){ return '<div style="overflow: visible;"><input class="filled-in" onClick="changeNaics'+num+'()" type="checkbox" id="'+ KEY +num+'" value="'+ KEY +
+'" ><label padding: 0px; style="overflow: visible;" onmouseover="showLabel(this)" onmouseout="hideLabel(this)" style="font-family:Courier New; color: #EEE;" for="'+KEY+num+'">'+KEY+'</label >&nbsp&nbsp&nbsp<a class="link" href="#" onClick="deleteCheckBox()" class="classname">x</a></div>';
 }
 
+function showLabel(x){
 
+    var naics = x.parentNode.children[0].value;
+    var height = x.parentNode.clientHeight;
+    $(x).parent().append("<div style='width: 200px; top: -23px; border-radius: 3px; "
+        + "left: 134px; background-color: white; opacity: .9; position: relative; font-size:12px;"
+        + "color: #444; box-shadow: 1px 1px 3px #888888; font-family: 'Helvetica', 'Arial', sans-serif;"
+        + "margin: 30px;  z-index: 10;'>"
+        + TechIndustries[naics]+"</div>");
+    $(x).parent().css("height", height);
+
+}
+function hideLabel(x){
+    $(x).parent().children('div').remove();
+}
 /* Adds indentation to Search filter and other styling */
 
 function formatFilter(key){
@@ -27,6 +41,27 @@ function formatFilter(key){
 }
 
 
+function disableAnimation(){
+
+    ANIMATE = false;
+    console.log("disable");
+    $("#animatebtn1").text("play_arrow");
+    $("#animatebtn1").attr("onclick", null).css("color", "#DDD");
+    $('.material-icons').hover( function() {
+    $(this).css('text-shadow','0 0 0px rgba(0,0,0,0)'); });
+    $("#animatebtn2").attr("onclick", "").css("color", "#DDD"); 
+    disabled = true;
+}
+
+function enableAnimation(){
+    console.log("enable");
+    $("#animatebtn1").attr("onclick", "play()").css("color", "#4d4d4d");
+    $('.material-icons').hover( function() {
+    $(this).css("text-shadow", "0 0 5px rgba(0,0,0,0.5)");}, function(){
+    $(this).css("text-shadow", "0 0 0px rgba(0,0,0,0.0)");});
+    $("#animatebtn2").attr("onclick", "replay()").css("color", "#4d4d4d"); 
+    disabled = false;   
+}
 /* USED TO CREATE FILLER CIRCLES IN PLACE OF HALO WHEN NO DATA IS BEING DISPLAYED */
 
 function createCircle(n, string){
@@ -78,22 +113,12 @@ circle =
         .style("font-family", "Raleway")
         .style("font-size", "20px")
         .style("fill-opacity", .8);
-
-    viz[n].selection().select("svg").append("text")
-        .text("<<")
-        .attr("x", WIDTH/5)
-        .attr("y", WIDTH/2 -20)
-        .style("fill", "white")
-        .style("font-family", "Raleway")
-        .style("font-size", "100px")
-        .style("fill-opacity", .3);
 }
 
 function clearCircle(n){
     IsCircle[n] = 0;
     viz[n].selection().select("svg").selectAll("circle")[0][2].remove();
     viz[n].selection().select("svg").selectAll("circle")[0][0].remove();
-    viz[n].selection().select("svg").selectAll("text")[0][2].remove();
     viz[n].selection().select("svg").selectAll("text")[0][1].remove();
     viz[n].selection().select("svg").selectAll("circle")[0][0].remove();
 }

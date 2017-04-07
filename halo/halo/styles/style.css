@@ -6,7 +6,7 @@ body {
 
 /*********************************************************************************************************************
 
-                                                MAIN <HTML> ELEMENTS
+                                            HALO VIZ COMPONANTS
 
 **********************************************************************************************************************/
 
@@ -39,7 +39,7 @@ body {
 }
 .form-check {
     width: 20%;
-    font-family:Raleway;
+    font-family: 'Helvetica', 'Arial', sans-serif;
     border-radius: 3px;
     background: #666;
     border-color: #888;
@@ -70,7 +70,7 @@ body {
 .noUiSlider{
     width: 90%;
     margin: 0px auto;
-    top: 100%;
+    top: 98%;
     position: relative;
 }
 .noUiSlider .noUi-connect {
@@ -79,22 +79,44 @@ body {
 .noUiSlider .noUi-tooltip {
 
 }
+
 .year{
     position: relative;
-    top: -535px;
-    left: 45px;
+    top: -510px;
+    left: 48px;
+    font-size: 55px;
+    font-weight: 100;
     display: inline-block;
-    font-family: Raleway;
+    font-family: 'Helvetica', 'Arial', sans-serif;
     color: #555;
 }
-
+#title2{
+    position: relative;
+    top: -532px;
+}
+#congress1{
+    position: relative;
+    font-size: 16.75px;
+    top: -530px;
+    left: 50px;
+    color: #222;
+    opacity: .6;
+}
+#congress2{
+    position: relative;
+    font-size: 17px;
+    top: -446px;
+    left: 48px;
+    color: #222;
+    opacity: .6;
+}
 .graphTitle{
     position: relative;
     font-weight:300;
-    font-family: Raleway;
-    font-size: 20px;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-size: 18px;
     width: 350px;
-    top: -57%;
+    top: -55%;
     left: 30.5%;
 
 }
@@ -108,23 +130,23 @@ body {
     z-index: 0;
 }
 #animatebtn1{
-    font-size: 45px;
+    font-size: 42px;
     position: relative;
     left: -18%;
     top: 35px;
+    display: inline-block;
     color:  #4d4d4d;
 }
 #animatebtn2{
-    font-size:40px;
+    font-size:35px;
     position: relative;
-    left: -40%;
-    top: 35px;
+    left: -38%;
+    top: 32px;
+    display: inline-block;
     color:  #4d4d4d;
 }
 .material-icons:hover {
-
     text-shadow: 0 0 5px rgba(0,0,0,0.5);
-
 }
 /********************************************************************************************************************
 
@@ -271,12 +293,10 @@ input[type=text] {
 }
 
 .my-tip {
-    font-family:Raleway;
-    font-weight:300;
-    text-anchor:middle;
+    font-family: Raleway;
+    font-weight: 300;
+    text-anchor: middle;
 }
-
-
 
 
 /* MATERIAL.CSS */
@@ -289,12 +309,12 @@ input[type=text] {
 
 
 div.settings-label {
-    font-size:12px;
-    color:#BBB;
+    font-size: 12px;
+    color: #BBB;
     font-style: italic;
-    margin-top:-10px;
-    margin-bottom:40px;
-    font-weight:300;
+    margin-top: -10px;
+    margin-bottom: 40px;
+    font-weight: 300;
 }
 
 div.tooltip {

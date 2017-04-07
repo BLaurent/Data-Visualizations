@@ -2,26 +2,23 @@ var num;                //used to determine elements of correct halo PRIMARY(1) 
 var viz = {};           // vizuly ui objects
 var viz_slider ={};     //slider forms for both graphs, PRIMARY(1) and SECONDARY(2)
 var theme = {};         // Theme variables for both graphs, PRIMARY(1) and SECONDARY(2)
-var naicsCodes = {};    // array naicsCode1 and naicsCode2
-var naicsCodes1 = {};   // holds checked codes that are currently/to be displayed in PRIMARY(1) graph
-var naicsCodes2 = {};   // holds checked codes that are currently/to be displayed in SECONDARY(2) graph
+var naicsCodes = [];    // array naicsCode1 and naicsCode2
 var Industry_title = {};// D3 selection that holds displayed industry title
 var vizData = {};       // updated data used attached to viz selection
 var viz_container;      // html element that holds the viz (d3 selection)
-var yearTOP;            // upper bound of year range for PRIMARY GRAPH
-var loadedIndustries = {};
+var loadedNaics = [];   // stores NAICS codes that are in the form of a checkbox ready to be displayed
 var circle;
-var customSkin;         // biparison theme
+var customSkin;         // biparison themec
 var relatedCodes;       // suggested Industy Data based on user's NaicsCode search (NOT IN USE)
 var Industry;           // text to go in Industry title
 var repColor="#F80018";
 var demColor="#0543bc";
 var otherColor="#FFa400";
 var ANIMATE; //bool value that determines if animate feature is on or off
-
 var WIDTH = 450;
 var HEIGHT = 510;
-var currentYEAR;
+var currentYEAR = 2016;
+var BASECONGRESS = 106;
 var INDUSTRY_TITLE_WIDTH = 500;
 var formatDate = d3.time.format("%b %d, 20%y");
 
@@ -33,15 +30,25 @@ var datatip='<div class="tooltip" style="width: 250px; background-opacity:.5">' 
     '</div>';
 
 function loadData() {
-    d3.json("/halo/data/tech_naics/"+DEFAULT_CODE+".json", function (json) {
-        data = json;
-        //console.log(data);
-        resolveDataConflicts(data, DEFAULT_CODE);
-        if(IsCircle[2] == 0){
-            initPrimary();
+
+        //$.each(TechIndustries, function(key, value){
+            d3.json("/halo/data/tech_naics/"+DEFAULT_CODE+".json", function (json) {
+                data = json;
+                resolveDataConflicts(data, DEFAULT_CODE);
+            });
+            
+        //});
+        //resolveDataConflicts(data, DEFAULT_CODE);
+        setTimeout(function(){ 
+                console.log(vizData);
+            
+            if(IsCircle[2] == 0){
+                initPrimary();
         }
-        //console.log(vizData);
-    });
+
+        }, 1000);
+
+    
     d3.csv("/halo/data/2017_NAICS_structure.csv",function (csv) {
         //console.log(csv);
         create_tree_begin(csv);
@@ -51,7 +58,7 @@ function loadData() {
 //Initializes Primary Halo Viz.
 
 function initPrimary() {
-    /*var url = "http://beta.lobbyview.org/api/viz?legal_name=Google";
+/*var url = "http://beta.lobbyview.org/api/viz?legal_name=Google";
     d3.json(url, function(error, d) {
         console.log(d);
     });*/
@@ -59,23 +66,15 @@ function initPrimary() {
     Initialize();
     changeSize(d3.select("#currentDisplay").attr("item_value"));
     updateHeading();
-    yearTOP = Number(yearTOP) + 1;
     $("#viz_container"+num).append('<ul class="myUL" id="myUL'+num+'"></ul>');
-    $("#viz_container"+num).css("z-index", -2);
+    $("#myUL"+num).css("z-index", "-2");
     //animate_graph();
 
 
     viz_slider[1].noUiSlider.on('set', function(values, handle){
         num = 1;
-        if(yearTOP != values[0]){
-            yearTOP = values[0];
-            yearLOW = undefined;
-            ANIMATE = false;
-             $("#animatebtn1").attr("onclick","play()");
-             $("#animatebtn1").text("play_arrow");
-            concatData();
-            updateHeading();
-        }
+        concatData();
+        updateHeading();
     });
 }
 
@@ -109,7 +108,7 @@ function Initialize(){
     Industry_title[num] = viz[num].selection().select("svg").append('text').attr("class", "industry")
         .style("font-family","Raleway")
         .style("font-size", "14")
-        .attr("y", '115%')
+        .attr("y", '110%')
         .attr("x", 0)
         .attr("dy", 0)
         .text(Industry)
@@ -293,17 +292,16 @@ function changeSkin(val) {
 
 function updateHeading(){
 
-    Industry = ': ';
+    var congress = Math.floor((viz_slider[num].noUiSlider.get()-1999)/2)+BASECONGRESS;
+    Industry = 'DISPLAYED: ';
+    console.log(num);
     $.each(naicsCodes[num], function(key, val){
-        Industry =  Industry + "  " + key + " - " + IndustryNames[key] + "  ";
+        Industry =  Industry + "  " + key + " - " + TechIndustries[key] + "  ";
     })
+    $("#congress"+num).html(congress+"th Congress");
 
-    if(yearLOW == undefined){
-        $("#title"+num).html(yearTOP).css("font-size", "60px");
-    }
-    else {
-        $("#title"+num).html(yearLOW + "<br> - " + yearTOP).css("font-size", "45px");
-    }
+    $("#title"+num).html(viz_slider[num].noUiSlider.get());
+
     $("#gt"+num).html("Lobbying Expenses for Congressional Bills by Firms in Industry Group " + num);
     Industry_title[num].text(Industry).call(wrap, INDUSTRY_TITLE_WIDTH);
 }
@@ -323,6 +321,7 @@ function search(){
     }
     else if(event.target.value.length == 1){
         showFilter();
+        getfilterOptions(KEY, TechIndustries); 
     }
     else if(event.keyCode == ENTER){ 
         hideFilter()
@@ -330,7 +329,7 @@ function search(){
     }
     else{
         $("#myUL"+num).children().remove();
-        getfilterOptions(KEY, naics_tree);
+        getfilterOptions(KEY, TechIndustries);          //SWITCH TO naics_tree object if working with dynamic data
     }
 
     if($("#myUL"+num).children().length > 8){           //adds border if there is an overflow
@@ -341,32 +340,36 @@ function search(){
     }
 }
 
-/* Add indentation so that filter resembles a tree structure*/
+/* Function adds Industries to search filter based on what client has typed in search box*/
 
 function getfilterOptions(KEY, object){
     $.each(object, function(key, value){
         if(KEY.indexOf(key) == 0 || key.indexOf(KEY) == 0){
-            if(key.length <= KEY.length){
+            $("#myUL"+num).prepend('<li ><a id='+key+' onclick="loadCheckBoxClick()" >'+key+" : "+value+'</a></li>');
+            /*if(key.length <= KEY.length){
                 $("#myUL"+num).prepend('<li ><a id='+key+' onclick="loadCheckBoxClick()" >'+key+" : "+value[1]+'</a></li>');
             }
             else{
                 $("#myUL"+num).append('<li ><a id='+key+' onclick="loadCheckBoxClick()" >'+key+" : "+value[1]+'</a></li>');
             }
-            formatFilter(key);
-            getfilterOptions(KEY, object[key][0]);
+            formatFilter(key);*/
+            //getfilterOptions(KEY, object[key][0]);
         }
     });
 }
+/* Clears the search filter and hides it */
 function hideFilter(){
     num = Num(event.target);
     $("#myUL"+num).css("border", "0px solid #ddd");
     event.target.value = "";
     setTimeout(function(){ 
+
         $("#myUL"+num).children().remove();
         $("#myUL"+num).css("z-index", "-2");
 
     }, 10);
 }
+/* Shows search filter */
 
 function showFilter(){
     num = Num(event.target);
@@ -376,83 +379,62 @@ function showFilter(){
 
 ************************************************************************************************************************/
 /*
- * If searched number is a valid code and the code doesn't already have a CB we create a CB for it
- * Is getting into function double the amount of times the second time with KEY = ''; FIX THIS FUNCTION
+ * If searched value is a valid code and the code doesn't already have an assoc. checkbox we create a checkbox for it
+ * 
  */
 function loadCheckBoxClick(){
     var KEY = event.target.id;
-    if(loadedIndustries[KEY] == undefined){
-        loadedIndustries[KEY] = KEY;
-        elem = createCheckbox(KEY);
-        $("#form"+num).append(elem);
-        if($("#form"+num).children().length > 8){
-            delete loadedIndustries[$("#form"+num).children()[2].value];
-            $("#form"+num).children()[2].remove();    
-        }
-        d3.json("/halo/data/tech_naics/"+KEY+".json", function (json) {
-            data = json;
-            resolveDataConflicts(data, KEY);
-        });
-        $("#search"+num).val("");
+    if(loadedNaics[num][KEY] == undefined){
+        loadCheckBox(KEY);
     }
 }
 function loadCheckBoxEnter(KEY){
-    if(KEY != '' && IndustryNames[KEY] != undefined && loadedIndustries[KEY] == undefined){
-        loadedIndustries[KEY] = KEY;
+    if(KEY != '' && TechIndustries[KEY] != undefined && loadedNaics[num][KEY] == undefined){
         num = Num(event.target.parentNode);
-        elem = createCheckbox(KEY);
-        naicsCodes[num][KEY] = KEY;
-        $("#form"+num).append(elem);
-        if($("#form"+num).children().length > 8){  
-            delete loadedIndustries[$("#form"+num).children()[2].value];
-            $("#form"+num).children()[2].remove();
-        }
-
-        d3.json("/halo/data/tech_naics/"+KEY+".json", function (json) {
-            data = json;
-            resolveDataConflicts(data, KEY);
-        });
-    
-     $("#search"+num).val("");
+        loadCheckBox(KEY);
     }
 }
 
+function loadCheckBox(KEY){
+
+    loadedNaics[num][KEY] = KEY;
+    elem = createCheckbox(KEY);
+    $("#form"+num).append(elem);
+
+    if($("#form"+num).children().length > 7){
+        delete loadedNaics[num][$("#form"+num).children()[2].value];
+        $("#form"+num).children()[3].remove();    
+    }
+
+    d3.json("/halo/data/tech_naics/"+KEY+".json", function (json) {
+        data = json;
+        resolveDataConflicts(data, KEY);
+    });
+    $("#search"+num).val("");
+}
+
+/* removes checkbox div */
 function deleteCheckBox() {
-    // If checkbox is checked we remove assoc. Industry data from the display
+    
     var elem = event.target.parentNode.children[2].parentNode.parentNode;
     var chkbox = event.target.parentNode.children[0];
     num= Num(elem);
+    // If checkbox is checked we remove assoc. Industry data from the display
     if(chkbox.checked == true){
         delete naicsCodes[num][chkbox.value];
         concatData();
     }
-    delete loadedIndustries[chkbox.value];
+    delete loadedNaics[num][chkbox.value];
     delete event.target.parentNode.remove();
 }
 
-/* function used to search DOM tree to see which halo graph (1 or 2) to change */
+/* function used to search DOM tree to see which halo graph (1 or 2) caller function is working on */
 function Num(element){
     if(element.id.indexOf("1") > -1){
         return 1;
     }
     else
         return 2;
-}
-/* Adds indentation to filter and other styling */
-
-function formatFilter(key){
-    if(key.length == 2){
-        $("#"+key).css("font-weight", "bold");
-    }
-    if(key.length == 4){
-        $("#"+key).css("padding-left", "20px");
-    }   
-    if(key.length == 5){
-        $("#"+key).css("padding-left", " 40px");
-    }
-    if(key.length == 6){
-        $("#"+key).css("padding-left", "40px");
-    }
 }
 
 

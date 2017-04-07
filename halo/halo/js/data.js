@@ -12,6 +12,7 @@ var DEFAULT_YEAR;
 var naics_tree = {};
 var node;
 var index = 0;
+var disabled;
 
 function create_tree_begin(data){
     var parentbranch = naics_tree;
@@ -83,7 +84,6 @@ function resolveDataConflicts(data, code){
 }
      /* represents instance of a halo link and node using a key-value array which holds sponsorship info */
 function addSponsors(data, i, x, code, year){
-    temp = [];
     report_info = data[i].specific_issues[x];
     for(y = 0; y < report_info.bills_by_algo.length; y++){
             var report_info = data[i].specific_issues[x];
@@ -92,11 +92,10 @@ function addSponsors(data, i, x, code, year){
                 console.log("sponsor is undefined");
                 continue;
             }
-            var array = [];
+            var array = {};
             array.firstname = report_info.bills_by_algo[y].sponsor.firstname;
             array.lastname = report_info.bills_by_algo[y].sponsor.lastname;
             array.sponsor_ID = report_info.bills_by_algo[y].sponsor.id;
-            //array.sponsor_ID = sponsor_ID.replace(/\s/g, '');
             array.sponsor_PTY = report_info.bills_by_algo[y].sponsor.party;
             array.sponsor = array.firstname + " "+ array.lastname;
             array.amount = data[i].amount;
@@ -125,10 +124,22 @@ function changeNaics2(){
 
 function changeNaics(){
     naicsCode = String(event.target.value);
+    var count = 0;
+    $.each(naicsCodes[num], function(){
+        count++;
+    });
+    console.log(count);
     if( event.target.checked == false){
         delete naicsCodes[num][naicsCode];
+        console.log(disabled);
+        if(count == 2 && disabled == true){ //FIX
+            enableAnimation();
+        }
     }
     else{
+        if(disabled == false && count != 0){  // if graph is already displaying an Industry we disable the animate buttons
+            disableAnimation()
+        }
         naicsCodes[num][naicsCode] = naicsCode;
     }
     updateHeading();
@@ -136,23 +147,13 @@ function changeNaics(){
 }
 function concatData(){
 
-     var new_data = [];
-     if(yearLOW == undefined){
-         $.each(naicsCodes[num], function(index, value){
-            if(vizData[index][yearTOP] != undefined){
-                new_data = new_data.concat(vizData[index][yearTOP]);
-            }
-         });
-     }
-     else {
-         $.each(naicsCodes[num], function(index, value){
-            var y=0;
-            for(x = yearLOW; y <= (yearTOP-yearLOW) ; x++){
-                new_data = new_data.concat(vizData[index][x]);
-                y++
-            }
-         });
-     }
+    var new_data = [];
+    $.each(naicsCodes[num], function(index, value){
+        if(vizData[index][viz_slider[num].noUiSlider.get()] != undefined){
+            new_data = new_data.concat(vizData[index][viz_slider[num].noUiSlider.get()]);
+        }
+    });
+
      if(new_data.length == 0 && IsCircle[num] == 0){
         createCircle(num, "No data to display for this year");
      }
